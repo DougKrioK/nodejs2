@@ -1,0 +1,26 @@
+{
+  "name": "nodejs2",
+  "version": "1.0.0",
+  "description": "Curso Node.js e HTTP: desenvolvendo uma API seguindo o estilo REST ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DougKrioK/nodejs2.git"
+  },
+  "keywords": [
+    "nodejs"
+  ],
+  "author": "douglaspinheiro@id.uff.br",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DougKrioK/nodejs2/issues"
+  },
+  "homepage": "https://github.com/DougKrioK/nodejs2#readme",
+  "dependencies": {
+    "consign": "^0.1.6",
+    "express": "^4.16.2"
+  }
+}
