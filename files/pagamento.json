@@ -4,5 +4,3 @@
     "moeda":"BRL",
     "descricao":"criando um pagamento"
 }
-
-curl http://localhost:3000/pagamentos/pagamento -X POST -H "Content-type: application/json" -d '{"forma_de_pagamento":"payfast","valor":10,"moeda":"BRL","descricao":"criando um pagamento"}'
