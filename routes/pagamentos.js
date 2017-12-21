@@ -11,10 +11,11 @@ module.exports = (app) => {
         console.log('processando uma requisicao de um novo pagamento');
 
 
-        req.assert('forma_dePagamento','Forma de pagamento é obrigatório').notEmpty();
+        req.assert('forma_de_pagamento','Forma de pagamento é obrigatório').notEmpty();
         req.assert('valor','Valor é obrigatorio e deve ser um decimal').notEmpty().isFloat();
+        req.assert("moeda", "Moeda é obrigatória e deve ter 3 caracteres").notEmpty().len(3,3);
 
-        var erros = req.validationErros();
+        var erros = req.validationErrors();
 
         if(erros){
             console.log('Erros de validação encontrados: '+erros);
@@ -38,7 +39,10 @@ module.exports = (app) => {
 
             } else {
                 console.log('Pagamento criado');
-                res.json(pagamento);
+                pagamento.id = resultado.insertId;
+                res.location('/pagamentos/pagamento/' + resultado.insertId)
+                    .status(201)
+                    .json(pagamento);
             }
 
             
