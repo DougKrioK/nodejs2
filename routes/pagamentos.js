@@ -5,6 +5,25 @@ module.exports = (app) => {
         res.send('oks')
         
     });
+    // ;id é o parametro que recebe na url
+    app.put('/pagamentos/pagamento/:id', (req,res) => {
+        let id = req.params.id;
+        let pagamento = {};
+        pagamento.id = id;
+        pagamento.status = 'confirmado';
+
+        let connection = app.persistencia.connectionFactory();
+        let pagamentoDao = new app.persistencia.PagamentoDao(connection);
+
+        pagamentoDao.atualiza(pagamento, (erro,resultado) => {
+            if(erro){
+                res,status(500).send(erro);
+                return;
+            }
+            res.send(pagamento);
+        });
+
+    })
 
     app.post('/pagamentos/pagamento', (req,res) => {
         var pagamento = req.body;
