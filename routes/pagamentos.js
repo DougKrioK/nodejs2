@@ -23,6 +23,25 @@ module.exports = (app) => {
             res.send(pagamento);
         });
 
+    });
+
+    app.delete('/pagamentos/pagamento/:id', (req,res) => {
+        let id = req.params.id;
+        let pagamento = {};
+        pagamento.id = id;
+        pagamento.status = 'cancelado';
+
+        let connection = app.persistencia.connectionFactory();
+        let pagamentoDao = new app.persistencia.PagamentoDao(connection);
+
+        pagamentoDao.atualiza(pagamento, (erro,resultado) => {
+            if(erro){
+                res,status(500).send(erro);
+                return;
+            }
+            res.status(204).send(pagamento);
+        });
+
     })
 
     app.post('/pagamentos/pagamento', (req,res) => {
