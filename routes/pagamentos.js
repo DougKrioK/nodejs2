@@ -1,49 +1,15 @@
 module.exports = (app) => {
+    const PAGAMENTO_CRIADO = "CRIADO";
+    const PAGAMENTO_CONFIRMADO = "CONFIRMADO";
+    const PAGAMENTO_CANCELADO = "CANCELADO";
 
+    //consultar
     app.get('/pagamentos',(req,res) => {
         console.log('recebida requisição de pagamentos');
         res.send('oks')
         
     });
-    // ;id é o parametro que recebe na url
-    app.put('/pagamentos/pagamento/:id', (req,res) => {
-        let id = req.params.id;
-        let pagamento = {};
-        pagamento.id = id;
-        pagamento.status = 'confirmado';
-
-        let connection = app.persistencia.connectionFactory();
-        let pagamentoDao = new app.persistencia.PagamentoDao(connection);
-
-        pagamentoDao.atualiza(pagamento, (erro,resultado) => {
-            if(erro){
-                res,status(500).send(erro);
-                return;
-            }
-            res.send(pagamento);
-        });
-
-    });
-
-    app.delete('/pagamentos/pagamento/:id', (req,res) => {
-        let pagamento = {};
-        let id = req.params.id;
-        pagamento.id = id;
-        pagamento.status = 'cancelado';
-
-        let connection = app.persistencia.connectionFactory();
-        let pagamentoDao = new app.persistencia.PagamentoDao(connection);
-
-        pagamentoDao.atualiza(pagamento, (erro,resultado) => {
-            if(erro){
-                res,status(500).send(erro);
-                return;
-            }
-            res.status(204).send(pagamento);
-        });
-
-    })
-
+    //criar
     app.post('/pagamentos/pagamento', (req,res) => {
         var pagamento = req.body;
         console.log('processando uma requisicao de um novo pagamento');
@@ -61,7 +27,7 @@ module.exports = (app) => {
             return;
         }
 
-        pagamento.status='criado';
+        pagamento.status=PAGAMENTO_CRIADO;
         pagamento.data = new Date;
 
         var connection = app.persistencia.connectionFactory();
@@ -109,5 +75,47 @@ module.exports = (app) => {
 
             
         });
-    })
+    });
+
+    //alterar ou confirmar
+    // ;id é o parametro que recebe na url
+    app.put('/pagamentos/pagamento/:id', (req,res) => {
+        let id = req.params.id;
+        let pagamento = {};
+        pagamento.id = id;
+        pagamento.status = PAGAMENTO_CONFIRMADO;
+
+        let connection = app.persistencia.connectionFactory();
+        let pagamentoDao = new app.persistencia.PagamentoDao(connection);
+
+        pagamentoDao.atualiza(pagamento, (erro,resultado) => {
+            if(erro){
+                res,status(500).send(erro);
+                return;
+            }
+            res.send(pagamento);
+        });
+
+    });
+
+    //deletar ou desativar
+    app.delete('/pagamentos/pagamento/:id', (req,res) => {
+        let pagamento = {};
+        let id = req.params.id;
+        pagamento.id = id;
+        pagamento.status = PAGAMENTO_CANCELADO;
+
+        let connection = app.persistencia.connectionFactory();
+        let pagamentoDao = new app.persistencia.PagamentoDao(connection);
+
+        pagamentoDao.atualiza(pagamento, (erro,resultado) => {
+            if(erro){
+                res,status(500).send(erro);
+                return;
+            }
+            res.status(204).send(pagamento);
+        });
+
+    });
+
 }
