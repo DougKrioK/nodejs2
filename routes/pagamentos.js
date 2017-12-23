@@ -26,8 +26,8 @@ module.exports = (app) => {
     });
 
     app.delete('/pagamentos/pagamento/:id', (req,res) => {
-        let id = req.params.id;
         let pagamento = {};
+        let id = req.params.id;
         pagamento.id = id;
         pagamento.status = 'cancelado';
 
@@ -78,13 +78,36 @@ module.exports = (app) => {
             } else {
                 console.log('Pagamento criado');
                 pagamento.id = resultado.insertId;
+
+                //na resposta, eu digo pro cliente quais possiveis caminhos ele pode seguir, alterar ou deletar.
+                /**
+                 *  Hateoas >
+                    Hypermedia As The Engine Of Applications State >
+                    "hypermedia como motor da maquina de estados da aplicação"
+                 */
+                var response = {
+                    dados_do_pagamento: pagamento,
+                    links: [
+                        {
+                            href:'http://localhost:3000/pagamentos/pagamento/'+pagamento.id,
+                            rel:'confirmar',
+                            method:'PUT'
+                        },
+                        {
+                            href:'http://localhost:3000/pagamentos/pagamento/'+pagamento.id,
+                            rel:'cancelar',
+                            method:'DELETE'
+                        },
+
+                    ]
+
+                }
                 res.location('/pagamentos/pagamento/' + resultado.insertId)
                     .status(201)
-                    .json(pagamento);
+                    .json(response);
             }
 
             
         });
     })
 }
-
